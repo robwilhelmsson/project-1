@@ -84,11 +84,27 @@ function animate() {
   } else {
     player.velocity.x = 0
   }
-  // * Collision detection 
-  // if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y) {
-  //   player.velocity.y = 0
-  // }
-
+  // * Collision detection top of platform
+  if (player.position.y + player.height <= platform.position.y
+    && player.position.y + player.height + player.velocity.y >= platform.position.y
+    && player.position.x + player.width >= platform.position.x
+    && player.position.x <= platform.position.x + platform.width) {
+    player.velocity.y = 0
+  }
+  // * Collision detection bottom of platform
+  if (player.position.y >= platform.position.y - platform.height
+    && player.position.y <= platform.position.y + platform.height
+    && player.position.x + player.width >= platform.position.x
+    && player.position.x <= platform.position.x + platform.width) {
+    player.velocity.y = 1
+  }
+  // * Collision detection sides of platform
+  if (player.position.x + player.width >= platform.position.x 
+    && player.position.x <= platform.position.x + platform.width
+    && player.position.y + player.height >= platform.position.y
+    && player.position.y <= platform.position.y + platform.height) {
+    player.velocity.x = 0
+  }
 }
 animate()
 
@@ -97,15 +113,17 @@ addEventListener('keydown', ({ keyCode }) => {
   switch (keyCode) {
     case 37:
       keys.left.pressed = true
+      console.log('left')
       break;
 
     case 39:
       keys.right.pressed = true
+      console.log('right')
       break;
 
     case 38:
       player.velocity.y -= 10
-      console.log('go')
+      console.log('up')
       break;
   }
 })
