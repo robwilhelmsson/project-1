@@ -2,12 +2,15 @@ import { platforms, canvas, ctx } from "./levels.js";
 
 
 // ! Variables
-const gravity = 0.18
+const gravity = 0.2
 const keys = {
   right: {
     pressed: false,
   },
   left: {
+    pressed: false,
+  },
+  up: {
     pressed: false,
   },
 }
@@ -66,37 +69,88 @@ function animate() {
   // * Moving direction for player 
   player.velocity.x = 0
   if (keys.right.pressed && lastKey === 39) {
-    player.velocity.x = 3
+    player.velocity.x += 3
   } else if (keys.left.pressed && lastKey === 37) {
-    player.velocity.x = -3
+    player.velocity.x += -3
   } else {
     player.velocity.x = 0
   }
+  if (keys.up.pressed) {
+    if (player.velocity.y === 0) {
+      player.velocity.y -= 5
+    }
+  }
+  // *******************************************************
+  // ! ROUNDS THE VELOCITY TO NEAREST INTEGER TO MAKE COLLISION DETECTION EASIER
+  // if (player.velocity.x > 0) {
+  //   player.velocity.x = Math.floor(player.velocity.x)
+  // } else {
+  //   player.velocity.x = Math.ceil(player.velocity.x)
+  // }
+  // if (player.velocity.y > 0) {
+  //   player.velocity.y = Math.floor(player.velocity.y)
+  // } else {
+  //   player.velocity.y = Math.ceil(player.velocity.y)
+  // }
+  // *******************************************************
 
-  // platforms.forEach((platform) => {
-  //   // * Collision detection top of platform
-  //   if (player.position.y + player.height <= platform.position.y
-  //     && player.position.y + player.height + player.velocity.y >= platform.position.y
-  //     && player.position.x + player.width >= platform.position.x
-  //     && player.position.x <= platform.position.x + platform.width) {
-  //     player.velocity.y = 0
-  //   }
-  //   // * Collision detection bottom of platform
-  //   if (player.position.y <= platform.position.y + platform.height
-  //     && player.position.y + player.height >= platform.position.y
-  //     && player.position.x + player.width >= platform.position.x
-  //     && player.position.x <= platform.position.x + platform.width) {
-  //     player.velocity.x = 0
-  //   }
+  // ! HORIZONTAL COLLISION SQUARE
+  const xRect = {
+    x: player.position.x + player.velocity.x,
+    y: player.position.y,
+    width: player.width,
+    height: player.height,
+  }
 
-  //   // * Collision detection sides of platform
-  //   if (player.position.x + player.width >= platform.position.x
-  //     && player.position.x <= platform.position.x + platform.width
-  //     && player.position.y + player.height >= platform.position.y
-  //     && player.position.y <= platform.position.y + platform.height) {
-  //     player.velocity.x = 0
-  //   }
-  // })
+  // ! VERTICAL COLLISION SQUARE
+  const yRect = {
+    x: player.position.x,
+    y: player.position.y + player.velocity.y,
+    width: player.width,
+    height: player.height,
+  }
+
+
+  // ! CHECK FOR COLLISON 
+  for (let i = 0; i < platforms.length; i++) {
+    const platformRect = {
+      x: platforms[i].position.x,
+      y: platforms[i].position.y,
+      width: platforms[i].width,
+      height: platforms[i].height,
+    }
+    if (checkCollisions(xRect, platformRect)) {
+      // while (checkCollisions(xRect, platformRect)) {
+      //   xRect.x -= Math.sign(player.velocity.x)
+      // }
+      // player.position.x = xRect.x
+      player.velocity.x = 0
+    }
+    if (checkCollisions(yRect, platformRect)) {
+      // while (checkCollisions(yRect, platformRect)) {
+      //   yRect.y -= Math.sign(player.velocity.y)
+      // }
+      // player.position.y = yRect.y
+      player.velocity.y = 0
+    }
+  }
+
+  // ****************** DO NOT TOUCH ***************************
+  function checkCollisions(rect1, rect2) {
+    if (rect1.x >= rect2.x + rect2.width) {
+      return false
+    } else if (rect1.x + rect1.width <= rect2.x) {
+      return false
+    } else if (rect1.y >= rect2.y + rect2.height) {
+      return false
+    } else if (rect1.y + rect1.height <= rect2.y) {
+      return false
+    } else {
+      return true
+    }
+  }
+  // ********************* DO NOT TOUCH ************************
+
 }
 animate()
 
@@ -113,14 +167,10 @@ addEventListener('keydown', ({ key }) => {
       lastKey = 39
       break;
     case 'ArrowUp':
-      if (player.velocity.y === 0) {
-        player.velocity.y -= 5
-        // console.log('up')
-      }
+      keys.up.pressed = true
       break;
   }
 })
-
 addEventListener('keyup', ({ key }) => {
   switch (key) {
     case 'ArrowLeft':
@@ -129,5 +179,37 @@ addEventListener('keyup', ({ key }) => {
     case 'ArrowRight':
       keys.right.pressed = false
       break;
+    case 'ArrowUp':
+      keys.up.pressed = false
+      break
   }
 })
+
+
+
+
+
+// platforms.forEach((platform) => {
+//   // * Collision detection top of platform
+//   if (player.position.y + player.height <= platform.position.y
+//     && player.position.y + player.height + player.velocity.y >= platform.position.y
+//     && player.position.x + player.width >= platform.position.x
+//     && player.position.x <= platform.position.x + platform.width) {
+//     player.velocity.y = 0
+//   }
+//   // * Collision detection bottom of platform
+//   if (player.position.y <= platform.position.y + platform.height
+//     && player.position.y + player.height >= platform.position.y
+//     && player.position.x + player.width >= platform.position.x
+//     && player.position.x <= platform.position.x + platform.width) {
+//     player.velocity.x = 0
+//   }
+
+//   // * Collision detection sides of platform
+//   if (player.position.x + player.width >= platform.position.x
+//     && player.position.x <= platform.position.x + platform.width
+//     && player.position.y + player.height >= platform.position.y
+//     && player.position.y <= platform.position.y + platform.height) {
+//     player.velocity.x = 0
+//   }
+// })

@@ -24,8 +24,10 @@ class Platform {
 
 
 export const platforms = [
-  new Platform(460, 450, 200, 20),
-  new Platform(600, 380, 200, 20),
-  new Platform(100, 280, 20, 200)
+  new Platform(460, 450, 50, 50),
+  new Platform(600, 380, 50, 50),
+  new Platform(100, 280, 50, 50),
+  new Platform(230, 320, 50, 50),
+  new Platform(350, 380, 50, 50)
 ]
 
