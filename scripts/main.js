@@ -1,6 +1,5 @@
 // ! Import and DOM elements
-import { platforms } from "./levels.js";
-
+import { platforms, grid, rows, cols, Platform } from "./levels.js";
 export const canvas = document.querySelector('.canvas')
 export const ctx = canvas.getContext('2d')
 
@@ -19,6 +18,18 @@ const keys = {
   },
 }
 let lastKey
+
+export function displayLevel() {
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (grid[row][col] === 1) {
+        const platform = new Platform(row * 35, col * 35)
+        platforms.push(platform)
+      }
+    }
+  }
+}
+displayLevel()
 
 
 // ! Creating the class for player
@@ -61,7 +72,7 @@ const player = new Player()
 // ! *******************************************************
 // ! Animate Function
 function animate() {
-  console.log('animate')
+  // console.log('animate')
   requestAnimationFrame(animate)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   player.update()
@@ -104,10 +115,10 @@ function animate() {
     }
     if (checkCollisions(xRect, platformRect)) {
       // * This makes things pixel perfect 
-      while (checkCollisions(xRect, platformRect)) {
-        xRect.x -= Math.sign(player.velocity.x)
-      }
-      player.position.x = xRect.x
+      // while (checkCollisions(xRect, platformRect)) {
+      //   xRect.x -= Math.sign(player.velocity.x)
+      // }
+      // player.position.x = xRect.x
       player.velocity.x = 0
     }
     if (checkCollisions(yRect, platformRect)) {
@@ -125,12 +136,12 @@ function animate() {
       if (checkCollisions(yRect, platformRect)) {
         player.velocity.y -= 5
       }
-      console.log('up')
     }
   })
 }
 animate()
 // ! *******************************************************
+
 
 
 // ! Collission detection function
