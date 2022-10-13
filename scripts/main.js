@@ -1,6 +1,4 @@
-// ! DOM Selectors
-const canvas = document.querySelector('.canvas')
-const ctx = canvas.getContext('2d')
+import { platforms, canvas, ctx } from "./levels.js";
 
 
 // ! Variables
@@ -52,35 +50,20 @@ class Player {
 }
 
 
-// ! Creating class for the platforms
-class Platform {
-  constructor(x, y) {
-    this.position = {
-      x,
-      y,
-    }
-    this.width = 14
-    this.height = 60
-  }
-  draw() {
-    ctx.fillStyle = 'black'
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-  }
-}
-
-
-// ! Create new player & platform
+// ! Create new player
 const player = new Player()
-const platforms = [ new Platform(250, 420)
-]
 
 
-// ! Create new player & platform
+
+// ! Animate Function
 function animate() {
   requestAnimationFrame(animate)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   player.update()
-  platforms.draw()
+  platforms.forEach((platform) => {
+    platform.draw()
+  })
+
   // * Moving direction for player 
   player.velocity.x = 0
   if (keys.right.pressed && lastKey === 39) {
@@ -91,28 +74,30 @@ function animate() {
     player.velocity.x = 0
   }
 
-  // * Collision detection top of platform
-  if (player.position.y + player.height <= platforms.position.y
-    && player.position.y + player.height + player.velocity.y >= platforms.position.y
-    && player.position.x + player.width >= platforms.position.x
-    && player.position.x <= platforms.position.x + platforms.width) {
-    player.velocity.y = 0
-  }
-  // * Collision detection bottom of platform
-  if (player.position.y >= platforms.position.y - platforms.height
-    && player.position.y <= platforms.position.y + platforms.height
-    && player.position.x + player.width >= platforms.position.x
-    && player.position.x <= platforms.position.x + platforms.width) {
-    player.velocity.y = 1
-  }
-  // * Collision detection sides of platform
-  if (player.position.x + player.width >= platforms.position.x
-    && player.position.x <= platforms.position.x + platforms.width
-    && player.position.y + player.height >= platforms.position.y
-    && player.position.y <= platforms.position.y + platforms.height) {
-    player.velocity.x = 0
-    // player.velocity.y = 2
-  }
+  platforms.forEach((platform) => {
+    // * Collision detection top of platform
+    if (player.position.y + player.height >= platform.position.y
+      && player.position.y + player.height + player.velocity.y >= platform.position.y
+      && player.position.x + player.width >= platform.position.x
+      && player.position.x <= platform.position.x + platform.width) {
+      player.velocity.y = 0
+    }
+    // * Collision detection bottom of platform
+    if (player.position.y >= platform.position.y - platform.height
+      && player.position.y <= platform.position.y + platform.height
+      && player.position.x + player.width >= platform.position.x
+      && player.position.x <= platform.position.x + platform.width) {
+      player.velocity.y = 1
+    }
+    // * Collision detection sides of platform
+    if (player.position.x + player.width >= platform.position.x
+      && player.position.x <= platform.position.x + platform.width
+      && player.position.y + player.height >= platform.position.y
+      && player.position.y <= platform.position.y + platform.height) {
+      player.velocity.x = 0
+      player.velocity.y = 2
+    }
+  })
 }
 animate()
 
