@@ -13,7 +13,6 @@ const keys = {
 }
 let lastKey
 
-
 // ! Creating the class for player
 class Player {
   constructor() {
@@ -74,46 +73,46 @@ function animate() {
     player.velocity.x = 0
   }
 
-  platforms.forEach((platform) => {
-    // * Collision detection top of platform
-    if (player.position.y + player.height >= platform.position.y
-      && player.position.y + player.height + player.velocity.y >= platform.position.y
-      && player.position.x + player.width >= platform.position.x
-      && player.position.x <= platform.position.x + platform.width) {
-      player.velocity.y = 0
-    }
-    // * Collision detection bottom of platform
-    if (player.position.y >= platform.position.y - platform.height
-      && player.position.y <= platform.position.y + platform.height
-      && player.position.x + player.width >= platform.position.x
-      && player.position.x <= platform.position.x + platform.width) {
-      player.velocity.y = 1
-    }
-    // * Collision detection sides of platform
-    if (player.position.x + player.width >= platform.position.x
-      && player.position.x <= platform.position.x + platform.width
-      && player.position.y + player.height >= platform.position.y
-      && player.position.y <= platform.position.y + platform.height) {
-      player.velocity.x = 0
-      player.velocity.y = 2
-    }
-  })
+  // platforms.forEach((platform) => {
+  //   // * Collision detection top of platform
+  //   if (player.position.y + player.height <= platform.position.y
+  //     && player.position.y + player.height + player.velocity.y >= platform.position.y
+  //     && player.position.x + player.width >= platform.position.x
+  //     && player.position.x <= platform.position.x + platform.width) {
+  //     player.velocity.y = 0
+  //   }
+  //   // * Collision detection bottom of platform
+  //   if (player.position.y <= platform.position.y + platform.height
+  //     && player.position.y + player.height >= platform.position.y
+  //     && player.position.x + player.width >= platform.position.x
+  //     && player.position.x <= platform.position.x + platform.width) {
+  //     player.velocity.x = 0
+  //   }
+
+  //   // * Collision detection sides of platform
+  //   if (player.position.x + player.width >= platform.position.x
+  //     && player.position.x <= platform.position.x + platform.width
+  //     && player.position.y + player.height >= platform.position.y
+  //     && player.position.y <= platform.position.y + platform.height) {
+  //     player.velocity.x = 0
+  //   }
+  // })
 }
 animate()
 
 
 // ! Event Listeners
-addEventListener('keydown', ({ keyCode }) => {
-  switch (keyCode) {
-    case 37:
+addEventListener('keydown', ({ key }) => {
+  switch (key) {
+    case 'ArrowLeft':
       keys.left.pressed = true
       lastKey = 37
       break;
-    case 39:
+    case 'ArrowRight':
       keys.right.pressed = true
       lastKey = 39
       break;
-    case 38:
+    case 'ArrowUp':
       if (player.velocity.y === 0) {
         player.velocity.y -= 5
         // console.log('up')
@@ -122,12 +121,12 @@ addEventListener('keydown', ({ keyCode }) => {
   }
 })
 
-addEventListener('keyup', ({ keyCode }) => {
-  switch (keyCode) {
-    case 37:
+addEventListener('keyup', ({ key }) => {
+  switch (key) {
+    case 'ArrowLeft':
       keys.left.pressed = false
       break;
-    case 39:
+    case 'ArrowRight':
       keys.right.pressed = false
       break;
   }
