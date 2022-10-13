@@ -1,4 +1,8 @@
-import { platforms, canvas, ctx } from "./levels.js";
+// ! Import and DOM elements
+import { platforms } from "./levels.js";
+
+export const canvas = document.querySelector('.canvas')
+export const ctx = canvas.getContext('2d')
 
 
 // ! Variables
@@ -16,6 +20,7 @@ const keys = {
 }
 let lastKey
 
+
 // ! Creating the class for player
 class Player {
   constructor() {
@@ -26,7 +31,7 @@ class Player {
     }
     // * Player size & velocity
     this.width = 8
-    this.height = 14
+    this.height = 15
     this.velocity = {
       x: 0,
       y: 0,
@@ -50,11 +55,8 @@ class Player {
     }
   }
 }
-
-
 // ! Create new player
 const player = new Player()
-
 
 
 // ! Animate Function
@@ -65,36 +67,18 @@ function animate() {
   platforms.forEach((platform) => {
     platform.draw()
   })
-
   // * Moving direction for player 
   player.velocity.x = 0
-  if (keys.right.pressed && lastKey === 39) {
+  if (keys.right.pressed && lastKey === 'ArrowLeft') {
     player.velocity.x += 3
-  } else if (keys.left.pressed && lastKey === 37) {
-    player.velocity.x += -3
+  } else if (keys.left.pressed && lastKey === 'ArrowRight') {
+    player.velocity.x -= 3
   } else {
     player.velocity.x = 0
   }
-  if (keys.up.pressed) {
-    if (player.velocity.y === 0) {
-      player.velocity.y -= 5
-    }
-  }
-  // *******************************************************
-  // ! ROUNDS THE VELOCITY TO NEAREST INTEGER TO MAKE COLLISION DETECTION EASIER
-  // if (player.velocity.x > 0) {
-  //   player.velocity.x = Math.floor(player.velocity.x)
-  // } else {
-  //   player.velocity.x = Math.ceil(player.velocity.x)
-  // }
-  // if (player.velocity.y > 0) {
-  //   player.velocity.y = Math.floor(player.velocity.y)
-  // } else {
-  //   player.velocity.y = Math.ceil(player.velocity.y)
-  // }
-  // *******************************************************
 
-  // ! HORIZONTAL COLLISION SQUARE
+
+  // ! Horizontal collission square
   const xRect = {
     x: player.position.x + player.velocity.x,
     y: player.position.y,
@@ -102,7 +86,7 @@ function animate() {
     height: player.height,
   }
 
-  // ! VERTICAL COLLISION SQUARE
+  // ! Vertical collission square
   const yRect = {
     x: player.position.x,
     y: player.position.y + player.velocity.y,
@@ -110,8 +94,7 @@ function animate() {
     height: player.height,
   }
 
-
-  // ! CHECK FOR COLLISON 
+  // ! Loop to check for collisions
   for (let i = 0; i < platforms.length; i++) {
     const platformRect = {
       x: platforms[i].position.x,
@@ -120,51 +103,57 @@ function animate() {
       height: platforms[i].height,
     }
     if (checkCollisions(xRect, platformRect)) {
-      // while (checkCollisions(xRect, platformRect)) {
-      //   xRect.x -= Math.sign(player.velocity.x)
-      // }
-      // player.position.x = xRect.x
+      while (checkCollisions(xRect, platformRect)) {
+        xRect.x -= Math.sign(player.velocity.x)
+      }
+      player.position.x = xRect.x
       player.velocity.x = 0
     }
     if (checkCollisions(yRect, platformRect)) {
+      // * Do not need this while loop because the player 
+      // * always stands pixel perfect on platform. 
       // while (checkCollisions(yRect, platformRect)) {
       //   yRect.y -= Math.sign(player.velocity.y)
       // }
       // player.position.y = yRect.y
       player.velocity.y = 0
     }
-  }
-
-  // ****************** DO NOT TOUCH ***************************
-  function checkCollisions(rect1, rect2) {
-    if (rect1.x >= rect2.x + rect2.width) {
-      return false
-    } else if (rect1.x + rect1.width <= rect2.x) {
-      return false
-    } else if (rect1.y >= rect2.y + rect2.height) {
-      return false
-    } else if (rect1.y + rect1.height <= rect2.y) {
-      return false
-    } else {
-      return true
+    // * This needs to be below the collision detection otherwise
+    // * everything turns to s*** and I dont know why.
+    if (keys.up.pressed) {
+      if (checkCollisions(yRect, platformRect))
+        player.velocity.y -= 5
+      console.log('up')
     }
   }
-  // ********************* DO NOT TOUCH ************************
-
 }
 animate()
 
+// ! Collission detection function
+function checkCollisions(rect1, rect2) {
+  if (rect1.x >= rect2.x + rect2.width) {
+    return false
+  } else if (rect1.x + rect1.width <= rect2.x) {
+    return false
+  } else if (rect1.y >= rect2.y + rect2.height) {
+    return false
+  } else if (rect1.y + rect1.height <= rect2.y) {
+    return false
+  } else {
+    return true
+  }
+}
 
 // ! Event Listeners
 addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'ArrowLeft':
       keys.left.pressed = true
-      lastKey = 37
+      lastKey = 'ArrowRight'
       break;
     case 'ArrowRight':
       keys.right.pressed = true
-      lastKey = 39
+      lastKey = 'ArrowLeft'
       break;
     case 'ArrowUp':
       keys.up.pressed = true

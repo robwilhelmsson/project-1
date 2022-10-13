@@ -1,9 +1,4 @@
-
-// ! DOM Selectors
-export const canvas = document.querySelector('.canvas')
-export const ctx = canvas.getContext('2d')
-
-// ! Page Style
+import { ctx } from "./main.js";
 
 
 // ! Creating class for the platform
@@ -24,10 +19,11 @@ class Platform {
 
 
 export const platforms = [
-  new Platform(460, 450, 50, 50),
-  new Platform(600, 380, 50, 50),
-  new Platform(100, 280, 50, 50),
-  new Platform(230, 320, 50, 50),
-  new Platform(350, 380, 50, 50)
+  new Platform(460, 450, 15, 15),
+  new Platform(600, 380, 15, 15),
+  new Platform(100, 280, 15, 15),
+  new Platform(270, 320, 15, 15),
+  new Platform(300, 380, 15, 15),
+  new Platform(350, 380, 15, 15)
 ]
 
