@@ -58,16 +58,17 @@ class Player {
 // ! Create new player
 const player = new Player()
 
-
+// ! *******************************************************
 // ! Animate Function
 function animate() {
+  console.log('animate')
   requestAnimationFrame(animate)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   player.update()
   platforms.forEach((platform) => {
     platform.draw()
   })
-  // * Moving direction for player 
+  // * Moving direction for player (left and right)
   player.velocity.x = 0
   if (keys.right.pressed && lastKey === 'ArrowLeft') {
     player.velocity.x += 3
@@ -76,7 +77,6 @@ function animate() {
   } else {
     player.velocity.x = 0
   }
-
 
   // ! Horizontal collission square
   const xRect = {
@@ -95,14 +95,15 @@ function animate() {
   }
 
   // ! Loop to check for collisions
-  for (let i = 0; i < platforms.length; i++) {
+  platforms.forEach((platform) => {
     const platformRect = {
-      x: platforms[i].position.x,
-      y: platforms[i].position.y,
-      width: platforms[i].width,
-      height: platforms[i].height,
+      x: platform.position.x,
+      y: platform.position.y,
+      width: platform.width,
+      height: platform.height,
     }
     if (checkCollisions(xRect, platformRect)) {
+      // * This makes things pixel perfect 
       while (checkCollisions(xRect, platformRect)) {
         xRect.x -= Math.sign(player.velocity.x)
       }
@@ -121,13 +122,16 @@ function animate() {
     // * This needs to be below the collision detection otherwise
     // * everything turns to s*** and I dont know why.
     if (keys.up.pressed) {
-      if (checkCollisions(yRect, platformRect))
+      if (checkCollisions(yRect, platformRect)) {
         player.velocity.y -= 5
+      }
       console.log('up')
     }
-  }
+  })
 }
 animate()
+// ! *******************************************************
+
 
 // ! Collission detection function
 function checkCollisions(rect1, rect2) {
@@ -178,23 +182,31 @@ addEventListener('keyup', ({ key }) => {
 
 
 
+
+
+
+
+
+
+// ! INCORRECT COLLISION DETECTION.
+// ! RESULTS IN PLAYER GETTING STUCK ON PLATFORMS 
 // platforms.forEach((platform) => {
-//   // * Collision detection top of platform
+// * Collision detection top of platform
 //   if (player.position.y + player.height <= platform.position.y
 //     && player.position.y + player.height + player.velocity.y >= platform.position.y
 //     && player.position.x + player.width >= platform.position.x
 //     && player.position.x <= platform.position.x + platform.width) {
 //     player.velocity.y = 0
 //   }
-//   // * Collision detection bottom of platform
+// * Collision detection bottom of platform
 //   if (player.position.y <= platform.position.y + platform.height
 //     && player.position.y + player.height >= platform.position.y
 //     && player.position.x + player.width >= platform.position.x
 //     && player.position.x <= platform.position.x + platform.width) {
-//     player.velocity.x = 0
+//     player.velocity.y = 0
 //   }
 
-//   // * Collision detection sides of platform
+// * Collision detection sides of platform
 //   if (player.position.x + player.width >= platform.position.x
 //     && player.position.x <= platform.position.x + platform.width
 //     && player.position.y + player.height >= platform.position.y
