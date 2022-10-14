@@ -1,11 +1,16 @@
-// ! Import and DOM elements
-import { platforms, grid, rows, cols, Platform } from "./levels.js";
-export const canvas = document.querySelector('.canvas')
-export const ctx = canvas.getContext('2d')
+
+// ! Import
+import { grid } from "./levels.js";
 
 
 // ! Variables
+const canvas = document.querySelector('.canvas')
+const ctx = canvas.getContext('2d')
 const gravity = 0.2
+const platforms = []
+const rows = 35
+const cols = 80
+let lastKey = ''
 const keys = {
   right: {
     pressed: false,
@@ -17,13 +22,31 @@ const keys = {
     pressed: false,
   },
 }
-let lastKey
 
+
+// ! Creating class for the platform
+export class Platform {
+  constructor(x, y) {
+    this.position = {
+      x,
+      y,
+    }
+    this.width = 15
+    this.height = 15
+  }
+  draw() {
+    ctx.fillStyle = 'black'
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
+
+
+// ! Display level function
 export function displayLevel() {
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       if (grid[row][col] === 1) {
-        const platform = new Platform(row * 35, col * 35)
+        const platform = new Platform(col * 15, row * 15)
         platforms.push(platform)
       }
     }
@@ -66,8 +89,24 @@ class Player {
     }
   }
 }
-// ! Create new player
 const player = new Player()
+
+
+// ! Collission detection function
+function checkCollisions(rect1, rect2) {
+  if (rect1.x >= rect2.x + rect2.width) {
+    return false
+  } else if (rect1.x + rect1.width <= rect2.x) {
+    return false
+  } else if (rect1.y >= rect2.y + rect2.height) {
+    return false
+  } else if (rect1.y + rect1.height <= rect2.y) {
+    return false
+  } else {
+    return true
+  }
+}
+
 
 // ! *******************************************************
 // ! Animate Function
@@ -96,7 +135,6 @@ function animate() {
     width: player.width,
     height: player.height,
   }
-
   // ! Vertical collission square
   const yRect = {
     x: player.position.x,
@@ -104,7 +142,6 @@ function animate() {
     width: player.width,
     height: player.height,
   }
-
   // ! Loop to check for collisions
   platforms.forEach((platform) => {
     const platformRect = {
@@ -142,22 +179,6 @@ function animate() {
 animate()
 // ! *******************************************************
 
-
-
-// ! Collission detection function
-function checkCollisions(rect1, rect2) {
-  if (rect1.x >= rect2.x + rect2.width) {
-    return false
-  } else if (rect1.x + rect1.width <= rect2.x) {
-    return false
-  } else if (rect1.y >= rect2.y + rect2.height) {
-    return false
-  } else if (rect1.y + rect1.height <= rect2.y) {
-    return false
-  } else {
-    return true
-  }
-}
 
 // ! Event Listeners
 addEventListener('keydown', ({ key }) => {
@@ -225,3 +246,53 @@ addEventListener('keyup', ({ key }) => {
 //     player.velocity.x = 0
 //   }
 // })
+
+
+
+
+
+
+// class Lava {
+//   constructor(x, y) {
+//     this.position = {
+//       x,
+//       y,
+//     }
+//     this.width = 15
+//     this.height = 15
+//   }
+//   draw() {
+//     ctx.fillStyle = 'red'
+//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+//   }
+// }
+
+// class Tile {
+//   constructor(x, y) {
+//     this.position = {
+//       x,
+//       y,
+//     }
+//     this.width = 15
+//     this.height = 15
+//   }
+//   draw() {
+//     ctx.fillStyle = 'grey'
+//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+//   }
+// }
+
+// class Coin {
+//   constructor(x, y) {
+//     this.position = {
+//       x,
+//       y,
+//     }
+//     this.width = 5
+//     this.height = 5
+//   }
+//   draw() {
+//     ctx.fillStyle = 'yellow'
+//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+//   }
+// }

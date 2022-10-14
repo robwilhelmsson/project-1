@@ -1,100 +1,4 @@
-import { ctx } from "./main.js";
-
-
-// ! Creating class for the platform
-export class Platform {
-  constructor(x, y) {
-    this.position = {
-      x,
-      y,
-    }
-    this.width = 15
-    this.height = 15
-  }
-  draw() {
-    ctx.fillStyle = 'black'
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-  }
-}
-
-// class Lava {
-//   constructor(x, y) {
-//     this.position = {
-//       x,
-//       y,
-//     }
-//     this.width = 15
-//     this.height = 15
-//   }
-//   draw() {
-//     ctx.fillStyle = 'red'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
-
-// class Tile {
-//   constructor(x, y) {
-//     this.position = {
-//       x,
-//       y,
-//     }
-//     this.width = 15
-//     this.height = 15
-//   }
-//   draw() {
-//     ctx.fillStyle = 'grey'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
-
-// class Coin {
-//   constructor(x, y) {
-//     this.position = {
-//       x,
-//       y,
-//     }
-//     this.width = 5
-//     this.height = 5
-//   }
-//   draw() {
-//     ctx.fillStyle = 'yellow'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
-
-// export const platforms = [
-//   new Platform(270, 380),
-//   new Platform(270, 365),
-//   new Platform(270, 350),
-//   new Platform(270, 335),
-//   new Platform(270, 320),
-//   new Platform(270, 305),
-//   new Platform(270, 290),
-//   new Platform(270, 275),
-
-//   new Platform(285, 380),
-//   new Platform(300, 380),
-//   new Platform(315, 380),
-//   new Platform(330, 380),
-//   new Platform(345, 380),
-//   new Platform(360, 380),
-
-//   new Platform(255, 325),
-
-//   new Platform(400, 325),
-
-//   new Platform(330, 280),
-
-//   new Platform(470, 325)
-// ]
-
-export const platforms = []
-
-
-
-export const rows = 35
-export const cols = 80
-
+// ! Test Grid
 // export const grid = [
 //   [0,0,0,0,0,0,1,0,0,0],
 //   [0,0,0,0,0,0,0,0,0,0],
@@ -148,3 +52,28 @@ export const grid = [
 
 
 
+// export const platforms = [
+//   new Platform(270, 380),
+//   new Platform(270, 365),
+//   new Platform(270, 350),
+//   new Platform(270, 335),
+//   new Platform(270, 320),
+//   new Platform(270, 305),
+//   new Platform(270, 290),
+//   new Platform(270, 275),
+
+//   new Platform(285, 380),
+//   new Platform(300, 380),
+//   new Platform(315, 380),
+//   new Platform(330, 380),
+//   new Platform(345, 380),
+//   new Platform(360, 380),
+
+//   new Platform(255, 325),
+
+//   new Platform(400, 325),
+
+//   new Platform(330, 280),
+
+//   new Platform(470, 325)
+// ]
