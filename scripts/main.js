@@ -223,7 +223,7 @@ function animate() {
   })
 
 
-  // ! Loop to check for collisions with platforms
+  // ! Loop to check for collisions with lava
   lavas.forEach((lava) => {
     const lavaRect = {
       x: lava.position.x,
@@ -233,8 +233,20 @@ function animate() {
     }
     if (checkCollisions(yRect, lavaRect)) {
       player.velocity.y = 0
-      player.velocity.x = 0
-      ctx.fillStyle = 'blue'
+      console.log('lava')
+    }
+  })
+
+  // ! Loop to check for collisions with coin
+  coins.forEach((coin) => {
+    const coinRect = {
+      x: coin.position.x,
+      y: coin.position.y,
+      width: coin.width,
+      height: coin.height,
+    }
+    if (checkCollisions(xRect, coinRect)) {
+      console.log('coin')
     }
   })
 }
