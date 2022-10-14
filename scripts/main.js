@@ -8,6 +8,8 @@ const canvas = document.querySelector('.canvas')
 const ctx = canvas.getContext('2d')
 const gravity = 0.2
 const platforms = []
+const lavas = []
+const coins = []
 const rows = 35
 const cols = 80
 let lastKey = ''
@@ -40,18 +42,39 @@ export class Platform {
   }
 }
 
+
 // ! Creating class for the lava
-// class Lava extends Platform {
-//   constructor(x, y) {
-//     super(x, y)
-//     this.width = 15
-//     this.height = 15
-//   }
-//   draw() {
-//     ctx.fillStyle = 'red'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
+class Lava {
+  constructor(x, y) {
+    this.position = {
+      x,
+      y,
+    }
+    this.width = 15
+    this.height = 15
+  }
+  draw() {
+    ctx.fillStyle = 'red'
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
+
+
+// ! Creating class for the coin
+class Coin {
+  constructor(x, y) {
+    this.position = {
+      x,
+      y,
+    }
+    this.width = 5
+    this.height = 5
+  }
+  draw() {
+    ctx.fillStyle = 'yellow'
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
 
 
 // ! Display level function
@@ -61,6 +84,14 @@ export function displayLevel() {
       if (grid[row][col] === 1) {
         const platform = new Platform(col * 15, row * 15)
         platforms.push(platform)
+      }
+      if (grid[row][col] === 2) {
+        const lava = new Lava(col * 15, row * 15)
+        lavas.push(lava)
+      }
+      if (grid[row][col] === 3) {
+        const coin = new Coin(col * 15, row * 15)
+        coins.push(coin)
       }
     }
   }
@@ -121,11 +152,19 @@ function animate() {
   requestAnimationFrame(animate)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+  // * Drawing the different level items
   player.update()
   platforms.forEach((platform) => {
     platform.draw()
   })
-  // * Moving direction for player (left and right)
+  lavas.forEach((lava) => {
+    lava.draw()
+  })
+  coins.forEach((coin) => {
+    coin.draw()
+  })
+
+  // * Moving direction for player
   player.velocity.x = 0
   if (keys.right.pressed && lastKey === 'ArrowLeft') {
     player.velocity.x += 3
@@ -134,7 +173,6 @@ function animate() {
   } else {
     player.velocity.x = 0
   }
-
   if (keys.up.pressed)
     if (player.velocity.y === 0) {
       player.velocity.y -= 5
@@ -142,22 +180,21 @@ function animate() {
     }
   player.velocity.y += gravity
 
-
-  // ! Horizontal collission square
+  // ! Horizontal collission square player
   const xRect = {
     x: player.position.x + player.velocity.x,
     y: player.position.y,
     width: player.width,
     height: player.height,
   }
-  // ! Vertical collission square
+  // ! Vertical collission square for player
   const yRect = {
     x: player.position.x,
     y: player.position.y + player.velocity.y,
     width: player.width,
     height: player.height,
   }
-  // ! Loop to check for collisions
+  // ! Loop to check for collisions with platforms
   platforms.forEach((platform) => {
     const platformRect = {
       x: platform.position.x,
@@ -165,6 +202,7 @@ function animate() {
       width: platform.width,
       height: platform.height,
     }
+    // * What to do in case of collision with platform
     if (checkCollisions(xRect, platformRect)) {
       // * This makes things pixel perfect 
       while (checkCollisions(xRect, platformRect)) {
@@ -181,6 +219,22 @@ function animate() {
       // }
       // player.position.y = yRect.y
       player.velocity.y = 0
+    }
+  })
+
+
+  // ! Loop to check for collisions with platforms
+  lavas.forEach((lava) => {
+    const lavaRect = {
+      x: lava.position.x,
+      y: lava.position.y,
+      width: lava.width,
+      height: lava.height,
+    }
+    if (checkCollisions(yRect, lavaRect)) {
+      player.velocity.y = 0
+      player.velocity.x = 0
+      ctx.fillStyle = 'blue'
     }
   })
 }
@@ -277,17 +331,3 @@ addEventListener('keyup', ({ key }) => {
 //   }
 // }
 
-// class Coin {
-//   constructor(x, y) {
-//     this.position = {
-//       x,
-//       y,
-//     }
-//     this.width = 5
-//     this.height = 5
-//   }
-//   draw() {
-//     ctx.fillStyle = 'yellow'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
