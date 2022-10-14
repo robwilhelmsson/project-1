@@ -40,6 +40,19 @@ export class Platform {
   }
 }
 
+// ! Creating class for the lava
+// class Lava extends Platform {
+//   constructor(x, y) {
+//     super(x, y)
+//     this.width = 15
+//     this.height = 15
+//   }
+//   draw() {
+//     ctx.fillStyle = 'red'
+//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+//   }
+// }
+
 
 // ! Display level function
 export function displayLevel() {
@@ -81,12 +94,6 @@ class Player {
     this.draw()
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
-
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
-      this.velocity.y += gravity
-    } else {
-      this.velocity.y = 0
-    }
   }
 }
 const player = new Player()
@@ -111,9 +118,9 @@ function checkCollisions(rect1, rect2) {
 // ! *******************************************************
 // ! Animate Function
 function animate() {
-  // console.log('animate')
   requestAnimationFrame(animate)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+
   player.update()
   platforms.forEach((platform) => {
     platform.draw()
@@ -127,6 +134,14 @@ function animate() {
   } else {
     player.velocity.x = 0
   }
+
+  if (keys.up.pressed)
+    if (player.velocity.y === 0) {
+      player.velocity.y -= 5
+      console.log(player.velocity.y)
+    }
+  player.velocity.y += gravity
+
 
   // ! Horizontal collission square
   const xRect = {
@@ -152,10 +167,10 @@ function animate() {
     }
     if (checkCollisions(xRect, platformRect)) {
       // * This makes things pixel perfect 
-      // while (checkCollisions(xRect, platformRect)) {
-      //   xRect.x -= Math.sign(player.velocity.x)
-      // }
-      // player.position.x = xRect.x
+      while (checkCollisions(xRect, platformRect)) {
+        xRect.x -= Math.sign(player.velocity.x)
+      }
+      player.position.x = xRect.x
       player.velocity.x = 0
     }
     if (checkCollisions(yRect, platformRect)) {
@@ -166,13 +181,6 @@ function animate() {
       // }
       // player.position.y = yRect.y
       player.velocity.y = 0
-    }
-    // * This needs to be below the collision detection otherwise
-    // * everything turns to s*** and I dont know why.
-    if (keys.up.pressed) {
-      if (checkCollisions(yRect, platformRect)) {
-        player.velocity.y -= 5
-      }
     }
   })
 }
@@ -252,20 +260,7 @@ addEventListener('keyup', ({ key }) => {
 
 
 
-// class Lava {
-//   constructor(x, y) {
-//     this.position = {
-//       x,
-//       y,
-//     }
-//     this.width = 15
-//     this.height = 15
-//   }
-//   draw() {
-//     ctx.fillStyle = 'red'
-//     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-//   }
-// }
+
 
 // class Tile {
 //   constructor(x, y) {
