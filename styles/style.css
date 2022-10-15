@@ -9,5 +9,18 @@ body {
   margin-top: 0px;
   display: flex;
   border: 1px solid black;
+  /* background-image: url("/assets/rock.png"); */
+  /* background-size: cover; */
+  /* background-position: 0 50%; */
   background-color: rgb(191, 184, 184);
+}
+
+
+.coin {
+  /* position: absolute; */
+  color: aquamarine;
+  width: 10px;
+  height: 10px;
+  /* background-color:#07b313; */
+  /* border-radius: 10px; */
 }

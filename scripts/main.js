@@ -1,6 +1,6 @@
 
 // ! Import
-import { grid } from "./levels.js";
+import { levelsObject } from "./levels.js";
 
 
 // ! Variables
@@ -27,7 +27,7 @@ const keys = {
 
 
 // ! Creating class for the platform
-export class Platform {
+class Platform {
   constructor(x, y) {
     this.position = {
       x,
@@ -72,31 +72,32 @@ class Coin {
   }
   draw() {
     ctx.fillStyle = 'yellow'
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    ctx.fillRect(this.position.x + 5, this.position.y + 5, this.width, this.height)
   }
 }
 
 
-// ! Display level function
-export function displayLevel() {
+// ! Display level function (1 - platform, 2 - lava, 3 - coinc)
+function displayLevel(levelNum) {
+  const level = levelsObject[levelNum]
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      if (grid[row][col] === 1) {
+      if (level[row][col] === 1) {
         const platform = new Platform(col * 15, row * 15)
         platforms.push(platform)
       }
-      if (grid[row][col] === 2) {
+      if (level[row][col] === 2) {
         const lava = new Lava(col * 15, row * 15)
         lavas.push(lava)
       }
-      if (grid[row][col] === 3) {
+      if (level[row][col] === 3) {
         const coin = new Coin(col * 15, row * 15)
         coins.push(coin)
       }
     }
   }
 }
-displayLevel()
+displayLevel(1)
 
 
 // ! Creating the class for player
@@ -105,7 +106,7 @@ class Player {
     // * Player start position
     this.position = {
       x: 300,
-      y: 250,
+      y: 270,
     }
     // * Player size & velocity
     this.width = 8
@@ -144,16 +145,26 @@ function checkCollisions(rect1, rect2) {
     return true
   }
 }
+// ! Reset Level function
+function resetLevel() {
+  // console.log('resetLevel')
+  player.position.x = 300
+  player.position.y = 270
+  requestAnimationFrame(animate)
+}
 
 
 // ! *******************************************************
 // ! Animate Function
 function animate() {
-  requestAnimationFrame(animate)
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  // console.log('animate')
+  
+ 
 
-  // * Drawing the different level items
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  // * Drawing the different level items0
   player.update()
+
   platforms.forEach((platform) => {
     platform.draw()
   })
@@ -176,7 +187,6 @@ function animate() {
   if (keys.up.pressed)
     if (player.velocity.y === 0) {
       player.velocity.y -= 5
-      console.log(player.velocity.y)
     }
   player.velocity.y += gravity
 
@@ -222,7 +232,21 @@ function animate() {
     }
   })
 
+  // ! Loop to check for collisions with coin
+  coins.forEach((coin, index) => {
+    const coinRect = {
+      x: coin.position.x,
+      y: coin.position.y,
+      width: coin.width,
+      height: coin.height,
+    }
+    if (checkCollisions(xRect, coinRect)) {
+      delete coins[index]
+      console.log('coin')
+    }
+  })
 
+  let end;
   // ! Loop to check for collisions with lava
   lavas.forEach((lava) => {
     const lavaRect = {
@@ -232,25 +256,24 @@ function animate() {
       height: lava.height,
     }
     if (checkCollisions(yRect, lavaRect)) {
-      player.velocity.y = 0
-      console.log('lava')
-    }
+      console.log('endgame')
+      end = true
+    } 
   })
 
-  // ! Loop to check for collisions with coin
-  coins.forEach((coin) => {
-    const coinRect = {
-      x: coin.position.x,
-      y: coin.position.y,
-      width: coin.width,
-      height: coin.height,
-    }
-    if (checkCollisions(xRect, coinRect)) {
-      console.log('coin')
-    }
-  })
+  if (end) {
+    resetLevel()
+    return
+  }
+
+  if (player.position.y - player.height > canvas.height) {
+    console.log('dead - lets reset')
+    resetLevel()
+  } else {
+    requestAnimationFrame(animate)
+  }
 }
-animate()
+requestAnimationFrame(animate)
 // ! *******************************************************
 
 
