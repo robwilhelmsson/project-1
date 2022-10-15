@@ -10,6 +10,7 @@ const gravity = 0.2
 const platforms = []
 const lavas = []
 const coins = []
+let coinsCollect = 0
 const rows = 35
 const cols = 80
 let lastKey = ''
@@ -72,7 +73,7 @@ class Coin {
   }
   draw() {
     ctx.fillStyle = 'yellow'
-    ctx.fillRect(this.position.x + 5, this.position.y + 5, this.width, this.height)
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
 
@@ -105,8 +106,8 @@ class Player {
   constructor() {
     // * Player start position
     this.position = {
-      x: 300,
-      y: 270,
+      x: 90,
+      y: 400,
     }
     // * Player size & velocity
     this.width = 8
@@ -148,8 +149,8 @@ function checkCollisions(rect1, rect2) {
 // ! Reset Level function
 function resetLevel() {
   // console.log('resetLevel')
-  player.position.x = 300
-  player.position.y = 270
+  player.position.x = 90
+  player.position.y = 400
   requestAnimationFrame(animate)
 }
 
@@ -240,9 +241,12 @@ function animate() {
       width: coin.width,
       height: coin.height,
     }
-    if (checkCollisions(xRect, coinRect)) {
+    if (checkCollisions(xRect, coinRect) || checkCollisions(yRect, coinRect)) {
       delete coins[index]
-      console.log('coin')
+      coinsCollect++
+    }
+    if (coinsCollect === 9) {
+      alert('You Win!')
     }
   })
 
