@@ -24,3 +24,12 @@ body {
   /* background-color:#07b313; */
   /* border-radius: 10px; */
 }
+
+.start-button {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 200px;
+  height: 50px;
+  border: 2px solid black;
+}
