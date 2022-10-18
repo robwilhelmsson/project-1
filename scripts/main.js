@@ -11,7 +11,7 @@ const gravity = 0.2
 let platforms = []
 let lavas = []
 let coins = []
-let upDownLava = []
+let downLava = []
 let coinsCollect = 0
 let level = 0
 const rows = 35
@@ -80,6 +80,10 @@ class DownLava {
     ctx.fillStyle = 'orange'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
+  update() {
+    this.draw()
+    this.position.y += 0.5
+  }
 }
 
 // ! Creating class for the coin
@@ -105,7 +109,7 @@ function displayLevel(levelNum) {
   platforms = []
   lavas = []
   coins = []
-  upDownLava = []
+  downLava = []
   const level = levelsObject[levelNum]
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -123,12 +127,12 @@ function displayLevel(levelNum) {
       }
       if (level[row][col] === 4) {
         const movingLava = new DownLava(col * 15, row * 15)
-        upDownLava.push(movingLava)
+        downLava.push(movingLava)
       }
     }
   }
 }
-displayLevel(0)
+displayLevel(4)
 
 // ! Creating the class for player
 class Player {
@@ -161,8 +165,8 @@ class Player {
   drawLose() {
     // ctx.clearRect(this.position.x, this.position.y, this.width, this.height)
     // this.height = 5
-    ctx.fillStyle = 'red'
-    console.log(this.position.x, this.position.y, this.height, this.width)
+    // ctx.fillStyle = 'red'
+    // console.log(this.position.x, this.position.y, this.height, this.width)
     // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
   }
@@ -193,13 +197,10 @@ function checkCollisions(rect1, rect2) {
 
 // ! Reset Level function
 function resetLevel() {
-  player.drawLose()
-  // player.height -= gravity
-  // setTimeout(() => {
-  // player.position.x = 90
-  // player.position.y = 400
-  // requestAnimationFrame(animate)
-  // }, 1000);
+  // player.drawLose()
+  player.position.x = 90
+  player.position.y = 400
+  requestAnimationFrame(animate)
 }
 
 
@@ -223,8 +224,8 @@ function animate() {
   coins.forEach((coin) => {
     coin.draw()
   })
-  upDownLava.forEach((movingLava) => {
-    movingLava.draw()
+  downLava.forEach((dl) => {
+    dl.update()
   })
   // * Moving direction for player
   player.velocity.x = 0
@@ -319,10 +320,7 @@ function animate() {
   if (player.position.y - player.height > canvasGame.height
     || player.position.x + player.width + 1 < 0
     || player.position.x - 1 > 1200) {
-    setTimeout(() => {
-      resetLevel()
-    }, 700);
-
+    resetLevel()
   } else if (level === 0 && coinsCollect === 1) {
     setTimeout(() => {
       displayLevel(nextLevel)
