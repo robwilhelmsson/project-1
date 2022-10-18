@@ -1,15 +1,17 @@
 
 // ! Import
-import { levelsObject } from "./levels.js";
+import { levelsObject } from './levels.js'
 
+// ! DOM
+const canvasGame = document.querySelector('.canvas-game')
 
 // ! Variables
-const canvas = document.querySelector('.canvas')
-const ctx = canvas.getContext('2d')
+const ctx = canvasGame.getContext('2d')
 const gravity = 0.2
 let platforms = []
 let lavas = []
 let coins = []
+let upDownLava = []
 let coinsCollect = 0
 let level = 0
 const rows = 35
@@ -26,6 +28,8 @@ const keys = {
     pressed: false,
   },
 }
+const rockImg = new Image()
+rockImg.src = '../assets/rock.jpg'
 
 
 // ! Creating class for the platform
@@ -39,11 +43,9 @@ class Platform {
     this.height = 15
   }
   draw() {
-    ctx.fillStyle = 'black'
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    ctx.drawImage(rockImg, this.position.x, this.position.y, this.width, this.height)
   }
 }
-
 
 // ! Creating class for the lava
 class Lava {
@@ -60,7 +62,25 @@ class Lava {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
-
+// ! Creating class for the up and down lava
+class DownLava {
+  constructor(x, y) {
+    this.position = {
+      x,
+      y,
+    }
+    this.width = 15
+    this.height = 15
+    this.velocity = {
+      x,
+      y,
+    }
+  }
+  draw() {
+    ctx.fillStyle = 'orange'
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
 
 // ! Creating class for the coin
 class Coin {
@@ -85,6 +105,7 @@ function displayLevel(levelNum) {
   platforms = []
   lavas = []
   coins = []
+  upDownLava = []
   const level = levelsObject[levelNum]
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -100,12 +121,14 @@ function displayLevel(levelNum) {
         const coin = new Coin(col * 15, row * 15)
         coins.push(coin)
       }
+      if (level[row][col] === 4) {
+        const movingLava = new DownLava(col * 15, row * 15)
+        upDownLava.push(movingLava)
+      }
     }
   }
 }
 displayLevel(0)
-
-
 
 // ! Creating the class for player
 class Player {
@@ -127,6 +150,21 @@ class Player {
   draw() {
     ctx.fillStyle = '#892CD4'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    this.height = 15
+    this.width = 8
+
+  }
+  drawWin() {
+    ctx.fillStyle = 'green'
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+  drawLose() {
+    // ctx.clearRect(this.position.x, this.position.y, this.width, this.height)
+    // this.height = 5
+    ctx.fillStyle = 'red'
+    console.log(this.position.x, this.position.y, this.height, this.width)
+    // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+
   }
   // * Making the player move and jump
   update() {
@@ -136,7 +174,6 @@ class Player {
   }
 }
 const player = new Player()
-
 
 // ! Collission detection function
 function checkCollisions(rect1, rect2) {
@@ -156,22 +193,26 @@ function checkCollisions(rect1, rect2) {
 
 // ! Reset Level function
 function resetLevel() {
-  // console.log('resetLevel')
-  player.position.x = 90
-  player.position.y = 400
-  requestAnimationFrame(animate)
+  player.drawLose()
+  // player.height -= gravity
+  // setTimeout(() => {
+  // player.position.x = 90
+  // player.position.y = 400
+  // requestAnimationFrame(animate)
+  // }, 1000);
 }
 
-function resetPosition() {
+
+function resetPlayer() {
   player.position.x = 90
   player.position.y = 400
 }
-
 
 // ! ******************** Animate Function ***************************
 function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  // * Drawing the different level items0
+  console.log('animate')
+  ctx.clearRect(0, 0, canvasGame.width, canvasGame.height)
+  // * Drawing the different level items
   player.update()
   platforms.forEach((platform) => {
     platform.draw()
@@ -181,6 +222,9 @@ function animate() {
   })
   coins.forEach((coin) => {
     coin.draw()
+  })
+  upDownLava.forEach((movingLava) => {
+    movingLava.draw()
   })
   // * Moving direction for player
   player.velocity.x = 0
@@ -253,8 +297,8 @@ function animate() {
     }
   })
 
-  let endGame;
   // ! Loop to check for collisions with lava
+  let endGame;
   lavas.forEach((lava) => {
     const lavaRect = {
       x: lava.position.x,
@@ -263,7 +307,6 @@ function animate() {
       height: lava.height,
     }
     if (checkCollisions(yRect, lavaRect)) {
-      console.log('endgame')
       endGame = true
     }
   })
@@ -272,21 +315,49 @@ function animate() {
     return
   }
 
-  if (player.position.y - player.height > canvas.height
-    || player.position.x < 0
-    || player.position.x + player.width > 1200) {
-    console.log('dead - lets reset')
-    resetLevel()
-  } else if (coinsCollect === 1 && level !== 3) {
+  // ! Generating next level when coins are collected
+  if (player.position.y - player.height > canvasGame.height
+    || player.position.x + player.width + 1 < 0
+    || player.position.x - 1 > 1200) {
+    setTimeout(() => {
+      resetLevel()
+    }, 700);
+
+  } else if (level === 0 && coinsCollect === 1) {
+    setTimeout(() => {
+      displayLevel(nextLevel)
+      resetPlayer()
+      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
+    }, 1000);
     const nextLevel = level += 1
     coinsCollect = 0
-    displayLevel(nextLevel)
-    requestAnimationFrame(animate) 
-  } else if (level === 3 && coinsCollect === 1) {
+    requestAnimationFrame(animate)
+  } else if (level === 1 && coinsCollect === 10) {
     setTimeout(() => {
-      alert('you win')
-    }, 2000);
-
+      displayLevel(nextLevel)
+      resetPlayer()
+    }, 1000);
+    const nextLevel = level += 1
+    coinsCollect = 0
+    requestAnimationFrame(animate)
+  } else if (level === 2 && coinsCollect === 14) {
+    setTimeout(() => {
+      displayLevel(nextLevel)
+      resetPlayer()
+      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/level3.jpg)"
+    }, 1000);
+    const nextLevel = level += 1
+    coinsCollect = 0
+    requestAnimationFrame(animate)
+  } else if (level === 3 && coinsCollect === 38) {
+    setTimeout(() => {
+      displayLevel(nextLevel)
+      resetPlayer()
+      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
+    }, 1000);
+    const nextLevel = level += 1
+    coinsCollect = 0
+    requestAnimationFrame(animate)
   } else {
     requestAnimationFrame(animate)
   }
