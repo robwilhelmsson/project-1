@@ -77,7 +77,7 @@ class DownLava {
     }
   }
   draw() {
-    ctx.fillStyle = 'orange'
+    ctx.fillStyle = 'red'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   update() {
@@ -132,7 +132,7 @@ function displayLevel(levelNum) {
     }
   }
 }
-displayLevel(4)
+displayLevel(0)
 
 // ! Creating the class for player
 class Player {
@@ -211,7 +211,7 @@ function resetPlayer() {
 
 // ! ******************** Animate Function ***************************
 function animate() {
-  console.log('animate')
+  // console.log('animate')
   ctx.clearRect(0, 0, canvasGame.width, canvasGame.height)
   // * Drawing the different level items
   player.update()
@@ -348,6 +348,15 @@ function animate() {
     coinsCollect = 0
     requestAnimationFrame(animate)
   } else if (level === 3 && coinsCollect === 38) {
+    setTimeout(() => {
+      displayLevel(nextLevel)
+      resetPlayer()
+      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
+    }, 1000);
+    const nextLevel = level += 1
+    coinsCollect = 0
+    requestAnimationFrame(animate)
+  } else if (level === 4 && coinsCollect === 38) {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
