@@ -75,6 +75,8 @@ class DownLava {
       x,
       y,
     }
+    this.initalPosX = x
+    this.initialPosY = y
   }
   draw() {
     ctx.fillStyle = 'red'
@@ -83,6 +85,10 @@ class DownLava {
   update() {
     this.draw()
     this.position.y += 0.5
+  }
+  resetLava() {
+    this.position.x = this.initalPosX
+    this.position.y = this.initialPosY
   }
 }
 
@@ -209,6 +215,7 @@ function resetPlayer() {
   player.position.y = 400
 }
 
+
 // ! ******************** Animate Function ***************************
 function animate() {
   // console.log('animate')
@@ -307,14 +314,52 @@ function animate() {
       width: lava.width,
       height: lava.height,
     }
+
     if (checkCollisions(yRect, lavaRect)) {
       endGame = true
     }
+  })
+  downLava.forEach((lava) => {
+    const DownLavaRect = {
+      x: lava.position.x,
+      y: lava.position.y,
+      width: lava.width,
+      height: lava.height,
+    }
+    if (checkCollisions(yRect, DownLavaRect) || checkCollisions(xRect, DownLavaRect)) {
+      endGame = true
+    }
+  })
+
+  downLava.forEach((dl) => {
+    const DownLavaRect = {
+      x: dl.position.x,
+      y: dl.position.y,
+      width: dl.width,
+      height: dl.height,
+    }
+    lavas.forEach((lava) => {
+      const lavaRect = {
+        x: lava.position.x,
+        y: lava.position.y,
+        width: lava.width,
+        height: lava.height,
+      }
+      if (checkCollisions(lavaRect, DownLavaRect)) {
+        console.log('you got hit soonnn')
+        dl.resetLava()
+      }
+    })
   })
   if (endGame) {
     resetLevel()
     return
   }
+
+
+
+
+
 
   // ! Generating next level when coins are collected
   if (player.position.y - player.height > canvasGame.height
@@ -411,10 +456,9 @@ addEventListener('keyup', ({ key }) => {
 
 
 
-
-
-// ! INCORRECT COLLISION DETECTION.
-// ! RESULTS IN PLAYER GETTING STUCK ON PLATFORMS 
+// ! INCORRECT STUPID COLLISION DETECTION.
+// ! RESULTS IN PLAYER GETTING STUCK ON PLATFORMS
+// ! PIECE OF CRAP CODE
 // platforms.forEach((platform) => {
 // * Collision detection top of platform
 //   if (player.position.y + player.height <= platform.position.y
