@@ -62,6 +62,7 @@ class Lava {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
+
 // ! Creating class for the up and down lava
 class DownLava {
   constructor(x, y) {
@@ -86,6 +87,7 @@ class DownLava {
     this.draw()
     this.position.y += 0.5
   }
+  // * This is used when down lava touches lava, to reset
   resetLava() {
     this.position.x = this.initalPosX
     this.position.y = this.initialPosY
@@ -108,9 +110,8 @@ class Coin {
   }
 }
 
-
 // ! Display level function (1 - platform, 2 - lava, 3 - coinc)
-// * The display level function allows arguments of level for condition checks
+// * The display level function allows arguments for level
 function displayLevel(levelNum) {
   platforms = []
   lavas = []
@@ -160,23 +161,8 @@ class Player {
   draw() {
     ctx.fillStyle = '#892CD4'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    this.height = 15
-    this.width = 8
-
   }
-  drawWin() {
-    ctx.fillStyle = 'green'
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-  }
-  drawLose() {
-    // ctx.clearRect(this.position.x, this.position.y, this.width, this.height)
-    // this.height = 5
-    // ctx.fillStyle = 'red'
-    // console.log(this.position.x, this.position.y, this.height, this.width)
-    // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-  }
-  // * Making the player move and jump
+  // * Adds movement with gravity later in program
   update() {
     this.draw()
     this.position.x += this.velocity.x
@@ -186,6 +172,7 @@ class Player {
 const player = new Player()
 
 // ! Collission detection function
+// * Used near bottom of animate function
 function checkCollisions(rect1, rect2) {
   if (rect1.x >= rect2.x + rect2.width) {
     return false
@@ -200,25 +187,20 @@ function checkCollisions(rect1, rect2) {
   }
 }
 
-
-// ! Reset Level function
-function resetLevel() {
-  // player.drawLose()
-  player.position.x = 90
-  player.position.y = 400
-  requestAnimationFrame(animate)
-}
-
-
+// ! Reset Player function
 function resetPlayer() {
   player.position.x = 90
   player.position.y = 400
 }
-
+// ! Reset Level function
+function resetLevel() {
+  resetPlayer()
+  requestAnimationFrame(animate)
+}
 
 // ! ******************** Animate Function ***************************
 function animate() {
-  // console.log('animate')
+  // * Clear so animate doesnt draw the frames on top of each other
   ctx.clearRect(0, 0, canvasGame.width, canvasGame.height)
   // * Drawing the different level items
   player.update()
@@ -236,6 +218,7 @@ function animate() {
   })
   // * Moving direction for player
   player.velocity.x = 0
+  // * Used lastKey so you can change direction while still holding key
   if (keys.right.pressed && lastKey === 'ArrowLeft') {
     player.velocity.x += 3
   } else if (keys.left.pressed && lastKey === 'ArrowRight') {
@@ -248,7 +231,6 @@ function animate() {
       player.velocity.y -= 5
     }
   player.velocity.y += gravity
-
   // ! Horizontal collission square player
   const xRect = {
     x: player.position.x + player.velocity.x,
@@ -290,7 +272,6 @@ function animate() {
       player.velocity.y = 0
     }
   })
-
   // ! Loop to check for collisions with coin
   coins.forEach((coin, index) => {
     const coinRect = {
@@ -304,7 +285,6 @@ function animate() {
       coinsCollect++
     }
   })
-
   // ! Loop to check for collisions with lava
   let endGame;
   lavas.forEach((lava) => {
@@ -314,7 +294,6 @@ function animate() {
       width: lava.width,
       height: lava.height,
     }
-
     if (checkCollisions(yRect, lavaRect)) {
       endGame = true
     }
@@ -330,7 +309,8 @@ function animate() {
       endGame = true
     }
   })
-
+  // ! Loop to check for collisions with lava and down lava
+  // * Resets the downLava to original position when it hits the lava
   downLava.forEach((dl) => {
     const DownLavaRect = {
       x: dl.position.x,
@@ -346,7 +326,6 @@ function animate() {
         height: lava.height,
       }
       if (checkCollisions(lavaRect, DownLavaRect)) {
-        console.log('you got hit soonnn')
         dl.resetLava()
       }
     })
@@ -355,12 +334,6 @@ function animate() {
     resetLevel()
     return
   }
-
-
-
-
-
-
   // ! Generating next level when coins are collected
   if (player.position.y - player.height > canvasGame.height
     || player.position.x + player.width + 1 < 0
@@ -405,10 +378,12 @@ function animate() {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
-      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
     }, 1000);
     const nextLevel = level += 1
     coinsCollect = 0
+    requestAnimationFrame(animate)
+  } else if (level === 5) {
+    document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
     requestAnimationFrame(animate)
   } else {
     requestAnimationFrame(animate)
@@ -416,7 +391,6 @@ function animate() {
 }
 requestAnimationFrame(animate)
 // ! *******************************************************
-
 
 // ! Event Listeners
 addEventListener('keydown', ({ key }) => {
@@ -447,10 +421,6 @@ addEventListener('keyup', ({ key }) => {
       break
   }
 })
-
-
-
-
 
 
 
