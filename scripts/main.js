@@ -30,7 +30,7 @@ const keys = {
   },
 }
 const rockImg = new Image()
-rockImg.src = '../assets/rock.jpg'
+rockImg.src = '/assets/rock.jpg'
 
 
 // ! Creating class for the platform
