@@ -4,6 +4,7 @@ import { levelsObject } from './levels.js'
 
 // ! DOM
 const canvasGame = document.querySelector('.canvas-game')
+const button = document.querySelector('.button')
 
 // ! Variables
 const ctx = canvasGame.getContext('2d')
@@ -58,7 +59,7 @@ class Lava {
     this.height = 15
   }
   draw() {
-    ctx.fillStyle = 'red'
+    ctx.fillStyle = '#ee111d'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
@@ -80,7 +81,7 @@ class DownLava {
     this.initialPosY = y
   }
   draw() {
-    ctx.fillStyle = 'red'
+    ctx.fillStyle = '#ee111d'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   update() {
@@ -105,7 +106,7 @@ class Coin {
     this.height = 5
   }
   draw() {
-    ctx.fillStyle = 'yellow'
+    ctx.fillStyle = '#f300ff'
     ctx.fillRect(this.position.x + 5, this.position.y + 5, this.width, this.height)
   }
 }
@@ -159,7 +160,7 @@ class Player {
   }
   // * Player style & fill
   draw() {
-    ctx.fillStyle = '#892CD4'
+    ctx.fillStyle = '#6200ff'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   // * Adds movement with gravity later in program
@@ -197,6 +198,12 @@ function resetLevel() {
   resetPlayer()
   requestAnimationFrame(animate)
 }
+
+function buttonFunction(){
+  button.innerHTML = "RESTART"
+  button.classList.add('button-show')
+}
+
 
 // ! ******************** Animate Function ***************************
 function animate() {
@@ -378,12 +385,14 @@ function animate() {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
+      buttonFunction()
+      document.querySelector('.canvas-game').style.backgroundImage = "url(assets/endscreen.jpg)"
     }, 1000);
     const nextLevel = level += 1
     coinsCollect = 0
     requestAnimationFrame(animate)
-  } else if (level === 5) {
-    document.querySelector('.canvas-game').style.backgroundImage = "url(assets/background.jpg)"
+  } else if (level === 5 && coinsCollect === 126) {
+    location.reload()
     requestAnimationFrame(animate)
   } else {
     requestAnimationFrame(animate)
@@ -393,6 +402,10 @@ requestAnimationFrame(animate)
 // ! *******************************************************
 
 // ! Event Listeners
+button.addEventListener('click', () => {
+  location.reload()
+})
+
 addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'ArrowLeft':
