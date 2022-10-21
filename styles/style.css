@@ -2,11 +2,11 @@ body {
   display: flex;
   justify-content: center;
   align-self: center;
-  background-color: rosybrown;
+  background-color: #ffffff
 }
 
 .canvas-game {
-  margin-top: 0px;
+  margin-top: 50px;
   display: flex;
   border: 1px solid black;
   background-image: url("/assets/startscreen.jpg");
