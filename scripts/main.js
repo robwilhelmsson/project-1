@@ -355,7 +355,7 @@ function animate() {
     const nextLevel = level += 1
     coinsCollect = 0
     requestAnimationFrame(animate)
-  } else if (level === 1 && coinsCollect === 10) {
+  } else if (level === 1 && coinsCollect === 1) {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
@@ -363,7 +363,7 @@ function animate() {
     const nextLevel = level += 1
     coinsCollect = 0
     requestAnimationFrame(animate)
-  } else if (level === 2 && coinsCollect === 14) {
+  } else if (level === 2 && coinsCollect === 1) {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
@@ -372,7 +372,7 @@ function animate() {
     const nextLevel = level += 1
     coinsCollect = 0
     requestAnimationFrame(animate)
-  } else if (level === 3 && coinsCollect === 38) {
+  } else if (level === 3 && coinsCollect === 1) {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
@@ -381,7 +381,7 @@ function animate() {
     const nextLevel = level += 1
     coinsCollect = 0
     requestAnimationFrame(animate)
-  } else if (level === 4 && coinsCollect === 38) {
+  } else if (level === 4 && coinsCollect === 1) {
     setTimeout(() => {
       displayLevel(nextLevel)
       resetPlayer()
