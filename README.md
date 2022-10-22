@@ -155,6 +155,7 @@ button.addEventListener('click', () => {
 * Collision detection
 * Accidentally calling the request animation frame again and then the game running at double speed. 
 * I eventually used images made in illustrator to add a few items that did not need to move on the screen. This made the code a little cleaner to deal with without having to create html elements which was a tad difficult with canvas. 
+* I had to put the startscreen background image in the javascript file as it would not laod in the css file. I think this was due to the background image changing on different level conditions.
 
 ### Next Time
 * I would like to make sprites to show moving animation.

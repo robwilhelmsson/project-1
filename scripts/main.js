@@ -159,7 +159,7 @@ class Player {
   }
   // * Player style & fill
   draw() {
-    ctx.fillStyle = '#6200ff'
+    ctx.fillStyle = '#880ED4'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   // * Adds movement with gravity later in program
