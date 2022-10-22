@@ -1,13 +1,13 @@
 ![ga_cog_large_red_rgb](https://cloud.githubusercontent.com/assets/40461/8183776/469f976e-1432-11e5-8199-6ac91363302b.png)
 
 ### General Assembly Software Engineering Flex 
-# Project 1 - Platformer Game
+# Project 1 - The Game
 
 ## The Overview
 
-This is my first project of the software engineering immersive course at GA London. The assignment was to create a grid-based game to be rendered in the browser, using HTML, CSS and JavaScript. The project was to be completed **individually** within **two weeks**.
+The assignment was to create a grid-based game to be rendered in the browser, using HTML, CSS and JavaScript. The project was to be completed **individually** within **two weeks**.
 
-Given a list of options from GA, I chose to make a simple platformer game called **Pixel Hill**. A game where a littl pixel character has to collect gems to reach the top of **pixel hill** to win. Including various level designs, a smooth character movement as well as fall traps and enemy traps.
+Given a list of options, I chose to make a simple platformer game called **Pixel Hill**. A game where a littl pixel character has to collect gems to reach the top of **Pixel Hill** to win. Including various level designs, a smooth character movement as well as fall traps and enemy traps.
 
 You can launch the game on GitHub pages [here](https://robwilhelmsson.github.io/project-game/), or find the GitHub repo [here](https://github.com/robwilhelmsson/project-game).
 
@@ -139,8 +139,10 @@ function displayLevel(levelNum) {
     coinsCollect = 0
     requestAnimationFrame(animate)
 ```
+* Calling the request animate function again in these if/else statements is necessary.
+* I aso added in the correct background with tips for certain levels in these statements. 
 ### Resetting Levels
-* I added a button on the last congratulation screen, mainly just to make sure I could. This calls a function which adds an html element to the screen which can be clicked on to reset. Although this just called the location.relaod() built in method.  
+* I added a button on the last congratulation screen, mainly just to make sure I could. This calls a function which adds an html element to the screen which can be clicked on to reset. Although this just calls the location.relaod() built in method.
 ```js
 function buttonFunction(){
   button.innerHTML = "RESTART"
@@ -151,14 +153,52 @@ button.addEventListener('click', () => {
   location.reload()
 })
 ```
+
+### Lava
+* I used a seperate class for the moving lava and added an initial position so when the collision detect with another lava was true, it reset to the original position using a ```resetLava()```function. 
+```js
+ downLava.forEach((dl) => {
+    const DownLavaRect = {
+      x: dl.position.x,
+      y: dl.position.y,
+      width: dl.width,
+      height: dl.height,
+    }
+    lavas.forEach((lava) => {
+      const lavaRect = {
+        x: lava.position.x,
+        y: lava.position.y,
+        width: lava.width,
+        height: lava.height,
+      }
+      if (checkCollisions(lavaRect, DownLavaRect)) {
+        dl.resetLava()
+      }
+    })
+  })
+```
+
 ### Main Issues
-* Collision detection
+* Collision detection was a challenge, but now it's working, it makes a lot more sense. 
 * Accidentally calling the request animation frame again and then the game running at double speed. 
 * I eventually used images made in illustrator to add a few items that did not need to move on the screen. This made the code a little cleaner to deal with without having to create html elements which was a tad difficult with canvas. 
 * I had to put the startscreen background image in the javascript file as it would not laod in the css file. I think this was due to the background image changing on different level conditions.
+* Getting the moving lava to reset in position was a challenge, the intitial position made it much easier.
+
+## Screenshots
+
+![start screen](/assets/screenshots/screenshot1.png)
+![start screen](/assets/screenshots/screenshot2.png)
+
+### Bugs 
+* There seems to sometimes be a problem if you jump directly into the corner of a square. I think this is caused by two seperate collision detections happening at once. 
+* Images laoding for the first time dont happen immediately, but it's not too much of a problem. 
 
 ### Next Time
 * I would like to make sprites to show moving animation.
 * Get the coins to wobble a bit, using the same method as I did with the moving lava. 
 * Create all the elements with javascript instead of using images. (although this wouldnt change the outcome)
 * More levels.
+* Parallax scrolling background
+* Add in a simple timer to see how long it took to complete.
+* Add a death counter. Both of these would be fairly simple variables to add.
