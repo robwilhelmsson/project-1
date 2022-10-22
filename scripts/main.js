@@ -32,7 +32,6 @@ const keys = {
 const rockImg = new Image()
 rockImg.src = 'assets/rock.jpg'
 
-
 // ! Creating class for the platform
 class Platform {
   constructor(x, y) {
@@ -204,9 +203,12 @@ function buttonFunction(){
   button.classList.add('button-show')
 }
 
+// ! Need to add the startscreen background here so it can be changed in the animate function
+document.querySelector('.canvas-game').style.backgroundImage = "url(assets/startscreen.jpg)"
 
 // ! ******************** Animate Function ***************************
 function animate() {
+  
   // * Clear so animate doesnt draw the frames on top of each other
   ctx.clearRect(0, 0, canvasGame.width, canvasGame.height)
   // * Drawing the different level items
