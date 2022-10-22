@@ -9,7 +9,7 @@ body {
   margin-top: 50px;
   display: flex;
   border: 1px solid black;
-  background-image: url("./assets/startscreen.jpg");
+  background-image: url(/assets/startscreen.jpg);
   background-size: 1200px;
   background-position: 0 80%;
 }
