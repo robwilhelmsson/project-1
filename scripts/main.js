@@ -58,7 +58,7 @@ class Lava {
     this.height = 15
   }
   draw() {
-    ctx.fillStyle = '#ee111d'
+    ctx.fillStyle = '#E33719'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
@@ -80,7 +80,7 @@ class DownLava {
     this.initialPosY = y
   }
   draw() {
-    ctx.fillStyle = '#ee111d'
+    ctx.fillStyle = '#E33719'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   update() {
@@ -105,7 +105,7 @@ class Coin {
     this.height = 5
   }
   draw() {
-    ctx.fillStyle = '#f300ff'
+    ctx.fillStyle = '	#FFD700'
     ctx.fillRect(this.position.x + 5, this.position.y + 5, this.width, this.height)
   }
 }
@@ -150,8 +150,8 @@ class Player {
       y: 400,
     }
     // * Player size & velocity
-    this.width = 8
-    this.height = 15
+    this.width = 10
+    this.height = 10
     this.velocity = {
       x: 0,
       y: 0,
@@ -159,7 +159,7 @@ class Player {
   }
   // * Player style & fill
   draw() {
-    ctx.fillStyle = '#880ED4'
+    ctx.fillStyle = '#296185'
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
   // * Adds movement with gravity later in program
@@ -440,10 +440,9 @@ addEventListener('keyup', ({ key }) => {
 
 
 
-
 // ! INCORRECT STUPID COLLISION DETECTION.
 // ! RESULTS IN PLAYER GETTING STUCK ON PLATFORMS
-// ! PIECE OF CRAP CODE
+// ! CRAP CODE
 // platforms.forEach((platform) => {
 // * Collision detection top of platform
 //   if (player.position.y + player.height <= platform.position.y
